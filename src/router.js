@@ -6,7 +6,10 @@ import {
 } from "react-router-dom";
 import Layout from "./layouts/layout";
 import App from "./pages/App";
-import CreateTask from "./pages/createTask";
+import CreateTask, {
+  loader as createTaskLoader,
+  action as createTaskAction,
+} from "./pages/createTask";
 
 export default function Router() {
   const router = createBrowserRouter(
@@ -14,7 +17,12 @@ export default function Router() {
       <Route path="/" element={<Layout />}>
         <Route index element={<App />} />
 
-        <Route path="/create-task" element={<CreateTask />} />
+        <Route
+          path="/create-task"
+          element={<CreateTask />}
+          loader={createTaskLoader}
+          action={createTaskAction}
+        />
       </Route>
     )
   );
