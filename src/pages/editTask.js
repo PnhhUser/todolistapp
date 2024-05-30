@@ -1,19 +1,19 @@
 import { Form, redirect, useNavigation, useParams } from "react-router-dom";
 import Select from "react-select";
-import { create, getById } from "../utils";
+import { getById, update } from "../utils";
 import { useEffect, useState } from "react";
 
 const freeze = (ms) =>
   new Promise((resolve) => setTimeout(() => resolve(), ms));
 
-export const action = async function ({ param, request }) {
+export const action = async function ({ params, request }) {
   let formData = await request.formData();
   let taskName = formData.get("taskName");
   let level = formData.get("level");
 
   if (taskName.length > 0) {
     await freeze(2000);
-    create({ taskName: taskName, level: level });
+    update(params.taskId, { taskName: taskName, level: level });
     return redirect("/");
   }
 
@@ -34,14 +34,12 @@ export default function EditTask() {
   const navigation = useNavigation();
   const param = useParams();
   const [data, setData] = useState([]);
-  const [selectIndex, setSelectIndex] = useState(0);
 
   useEffect(() => {
     async function fetchData() {
       const taskData = await getById(param.taskId);
 
       setData([...taskData]);
-      setSelectIndex(options.map((o) => o.value).indexOf(taskData[0].level));
     }
 
     fetchData();
@@ -63,7 +61,7 @@ export default function EditTask() {
             options={options}
             className="capitalize text-sm"
             name="level"
-            defaultValue={options[selectIndex]}
+            defaultValue={options[0]}
           />
         </div>
 

@@ -87,7 +87,6 @@ export const update = async function (id, data) {
 
     await updateDoc(taskListDoc, {
       ...data,
-      isDone: data.isDone,
     });
   } catch (err) {
     console.error(err);
