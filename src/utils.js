@@ -3,6 +3,9 @@ import {
   collection,
   deleteDoc,
   doc,
+  query,
+  updateDoc,
+  where,
   getDocs,
 } from "firebase/firestore";
 import uniqid from "uniqid";
@@ -27,6 +30,10 @@ export const currentDate = () => {
   return `${date}/${month}/${year} - ${hour}:${minute}`;
 };
 
+export function getPathSegment(url, index) {
+  return url.split("/")[index];
+}
+
 export const create = async function (data) {
   try {
     await addDoc(collection(db, collectName.taskList), {
@@ -43,14 +50,19 @@ export const create = async function (data) {
   }
 };
 
-export const getAll = async function () {
+export const getById = async function (id) {
   try {
-    const data = [];
-    const querySnapshot = await getDocs(collection(db, collectName.taskList));
+    const q = query(
+      collection(db, collectName.taskList),
+      where("id", "==", id)
+    );
+    const task = [];
+    const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
-      data.push({ ...doc.data(), id: doc.id });
+      task.push(doc.data());
     });
-    return data;
+
+    return task;
   } catch (error) {
     console.log("Error", error);
   }
@@ -62,6 +74,21 @@ export const remove = async function (taskId) {
 
     await deleteDoc(taskListDoc);
     console.log("remove success");
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+export const update = async function (id, data) {
+  try {
+    const taskListDoc = doc(db, collectName.taskList, id);
+
+    data.isDone = !data.isDone;
+
+    await updateDoc(taskListDoc, {
+      ...data,
+      isDone: data.isDone,
+    });
   } catch (err) {
     console.error(err);
   }

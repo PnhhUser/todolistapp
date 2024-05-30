@@ -19,6 +19,10 @@ export default function App() {
             setTaskList([...tasks]);
           }
 
+          if (change.type === "modified") {
+            // console.log("Modified: ", change.doc.data());
+          }
+
           if (change.type === "removed") {
             const newData = tasks.filter(
               (task) => task.taskId !== change.doc.data().taskId
@@ -81,6 +85,7 @@ export default function App() {
                       taskName={task.taskName}
                       level={task.level}
                       updateDateTask={task.updateDate}
+                      task={task}
                     />
                   </div>
                 );

@@ -1,11 +1,12 @@
-import { Form, redirect, useNavigation } from "react-router-dom";
+import { Form, redirect, useNavigation, useParams } from "react-router-dom";
 import Select from "react-select";
-import { create } from "../utils";
+import { create, getById } from "../utils";
+import { useEffect, useState } from "react";
 
 const freeze = (ms) =>
   new Promise((resolve) => setTimeout(() => resolve(), ms));
 
-export const action = async function ({ request }) {
+export const action = async function ({ param, request }) {
   let formData = await request.formData();
   let taskName = formData.get("taskName");
   let level = formData.get("level");
@@ -29,8 +30,23 @@ const options = [
   { value: "important", label: "important" },
 ];
 
-export default function CreateTask() {
+export default function EditTask() {
   const navigation = useNavigation();
+  const param = useParams();
+  const [data, setData] = useState([]);
+  const [selectIndex, setSelectIndex] = useState(0);
+
+  useEffect(() => {
+    async function fetchData() {
+      const taskData = await getById(param.taskId);
+
+      setData([...taskData]);
+      setSelectIndex(options.map((o) => o.value).indexOf(taskData[0].level));
+    }
+
+    fetchData();
+  }, [param]);
+
   return (
     <div className="px-6 h-[660px] relative">
       <Form method="post" className="mt-8">
@@ -39,6 +55,7 @@ export default function CreateTask() {
           name="taskName"
           placeholder="task name"
           className="capitalize text-sm border-[1px] outline-0 w-full h-10 rounded-md indent-4 mb-4"
+          defaultValue={data[0]?.taskName}
         />
         <div className="mb-4">
           <p className="text-xs capitalize mb-2 text-gray-500">level task</p>
@@ -46,7 +63,7 @@ export default function CreateTask() {
             options={options}
             className="capitalize text-sm"
             name="level"
-            defaultValue={[options[0]]}
+            defaultValue={options[selectIndex]}
           />
         </div>
 
@@ -74,7 +91,7 @@ export default function CreateTask() {
                 ></path>
               </svg>
             ) : (
-              "create"
+              "edit task"
             )}
           </button>
         </div>

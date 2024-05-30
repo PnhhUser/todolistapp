@@ -1,11 +1,19 @@
 import { Link, useLocation } from "react-router-dom";
 import { AiOutlineLeft, AiOutlineMenu } from "react-icons/ai";
+import { getPathSegment } from "../utils";
 
 export default function Header() {
   const location = useLocation();
 
-  const title =
-    location.pathname === "/create-task" ? "Create Task" : "List All";
+  let title = "";
+
+  if (location.pathname === "/create-task") {
+    title = "Create Task";
+  } else if (getPathSegment(location.pathname, 1) === "edit-task") {
+    title = "Edit task";
+  } else {
+    title = "List All";
+  }
 
   return (
     <div className="h-12 w-full flex items-center">

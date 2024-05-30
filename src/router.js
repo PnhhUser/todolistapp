@@ -10,6 +10,10 @@ import CreateTask, {
   loader as createTaskLoader,
   action as createTaskAction,
 } from "./pages/createTask";
+import EditTask, {
+  loader as editTaskLoader,
+  action as editTaskAction,
+} from "./pages/editTask";
 
 export default function Router() {
   const router = createBrowserRouter(
@@ -22,6 +26,13 @@ export default function Router() {
           element={<CreateTask />}
           loader={createTaskLoader}
           action={createTaskAction}
+        />
+
+        <Route
+          path="/edit-task/:taskId"
+          element={<EditTask />}
+          loader={editTaskLoader}
+          action={editTaskAction}
         />
       </Route>
     )
