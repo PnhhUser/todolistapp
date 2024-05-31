@@ -1,7 +1,8 @@
 import { Form, redirect, useNavigation, useParams } from "react-router-dom";
 import Select from "react-select";
-import { getById, update } from "../utils";
 import { useEffect, useState } from "react";
+import { options } from "../contants";
+import { getById, update } from "../service";
 
 const freeze = (ms) =>
   new Promise((resolve) => setTimeout(() => resolve(), ms));
@@ -24,26 +25,22 @@ export const loader = async function () {
   return null;
 };
 
-const options = [
-  { value: "normal", label: "normal" },
-  { value: "medium", label: "medium" },
-  { value: "important", label: "important" },
-];
-
 export default function EditTask() {
   const navigation = useNavigation();
   const param = useParams();
   const [data, setData] = useState([]);
+  const [isLoad, setIsLoad] = useState(false);
 
   useEffect(() => {
-    async function fetchData() {
-      const taskData = await getById(param.taskId);
-
-      setData([...taskData]);
-    }
-
-    fetchData();
+    getById(param.taskId).then((data) => {
+      setData([...data]);
+      setIsLoad(true);
+    });
   }, [param]);
+
+  if (!isLoad) {
+    return;
+  }
 
   return (
     <div className="px-6 h-[660px] relative">
@@ -51,8 +48,8 @@ export default function EditTask() {
         <input
           type="text"
           name="taskName"
-          placeholder="task name"
-          className="capitalize text-sm border-[1px] outline-0 w-full h-10 rounded-md indent-4 mb-4"
+          placeholder="Task name"
+          className="text-sm border-[1px] outline-0 w-full h-10 rounded-md indent-4 mb-4"
           defaultValue={data[0]?.taskName}
         />
         <div className="mb-4">
@@ -61,16 +58,17 @@ export default function EditTask() {
             options={options}
             className="capitalize text-sm"
             name="level"
-            defaultValue={options[0]}
+            defaultValue={options.find((o) => o.value === data[0]?.level)}
           />
         </div>
 
         <div className="absolute bottom-10 left-0 w-full px-6">
-          <button
-            type="submit"
-            className="w-full h-10 bg-blue-400 text-white rounded-md capitalize text-sm active:scale-[.95] transition-transform duration-[.3s]"
-          >
-            {navigation.state === "submitting" ? (
+          {navigation.state === "submitting" ? (
+            <button
+              type="submit"
+              disabled={true}
+              className="w-full h-10 bg-blue-400 text-white rounded-md capitalize text-sm"
+            >
               <svg
                 aria-hidden="true"
                 role="status"
@@ -88,10 +86,15 @@ export default function EditTask() {
                   fill="#1C64F2"
                 ></path>
               </svg>
-            ) : (
-              "edit task"
-            )}
-          </button>
+            </button>
+          ) : (
+            <button
+              type="submit"
+              className="w-full h-10 bg-blue-400 text-white rounded-md capitalize text-sm active:scale-[.95] transition-transform duration-[.3s]"
+            >
+              edit task
+            </button>
+          )}
         </div>
       </Form>
     </div>

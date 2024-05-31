@@ -1,22 +1,8 @@
 import { AiFillEdit, AiFillRest, AiOutlineFileDone } from "react-icons/ai";
-import { remove, update } from "../utils";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-
-const LEVEL = {
-  normal: {
-    textColor: "text-sky-500",
-    text: "normal",
-  },
-  medium: {
-    textColor: "text-orange-500",
-    text: "medium",
-  },
-  important: {
-    textColor: "text-red-500",
-    text: "important",
-  },
-};
+import { LEVEL } from "../contants";
+import { remove, update } from "../service";
 
 export default function CardTask({
   taskListId,
@@ -26,7 +12,7 @@ export default function CardTask({
   task,
 }) {
   let colorLevel = "";
-  const [done, setDone] = useState(false);
+  const [done, setDone] = useState(task.isDone);
 
   if (level === LEVEL.normal.text) {
     colorLevel = LEVEL.normal.textColor;
@@ -40,6 +26,7 @@ export default function CardTask({
     colorLevel = LEVEL.important.textColor;
   }
   const handleCheckDone = (id) => {
+    task.isDone = !task.isDone;
     update(id, task);
     setDone(task.isDone);
   };
@@ -48,12 +35,12 @@ export default function CardTask({
     <div className="flex w-full h-[auto] shadow-md border-[1px] rounded-md mb-4 py-2">
       <div className="w-[90%] rounded-s-md">
         <div className="ps-4 pe-1 mt-1">
-          <p className="text-sm capitalize font-bold">
+          <p className="text-sm font-bold">
             <span className={done ? "text-green-600" : "text-gray-500"}>
               {taskName} -
             </span>
             <span
-              className={done ? "text-green-600" : colorLevel}
+              className={`capitalize ${done ? "text-green-600" : colorLevel}`}
               style={{ marginLeft: 4 }}
             >
               {level}

@@ -1,6 +1,7 @@
 import { Form, redirect, useNavigation } from "react-router-dom";
 import Select from "react-select";
-import { create } from "../utils";
+import { options } from "../contants";
+import { create } from "../service";
 
 const freeze = (ms) =>
   new Promise((resolve) => setTimeout(() => resolve(), ms));
@@ -10,9 +11,11 @@ export const action = async function ({ request }) {
   let taskName = formData.get("taskName");
   let level = formData.get("level");
 
+  const indexLevel = options.map((option) => option.value).indexOf(level);
+
   if (taskName.length > 0) {
     await freeze(2000);
-    create({ taskName: taskName, level: level });
+    create({ taskName: taskName, level: level, indexLevel: indexLevel });
     return redirect("/");
   }
 
@@ -23,12 +26,6 @@ export const loader = async function () {
   return null;
 };
 
-const options = [
-  { value: "normal", label: "normal" },
-  { value: "medium", label: "medium" },
-  { value: "important", label: "important" },
-];
-
 export default function CreateTask() {
   const navigation = useNavigation();
   return (
@@ -37,8 +34,8 @@ export default function CreateTask() {
         <input
           type="text"
           name="taskName"
-          placeholder="task name"
-          className="capitalize text-sm border-[1px] outline-0 w-full h-10 rounded-md indent-4 mb-4"
+          placeholder="Task name"
+          className="text-sm border-[1px] outline-0 w-full h-10 rounded-md indent-4 mb-4"
         />
         <div className="mb-4">
           <p className="text-xs capitalize mb-2 text-gray-500">level task</p>
@@ -51,11 +48,12 @@ export default function CreateTask() {
         </div>
 
         <div className="absolute bottom-10 left-0 w-full px-6">
-          <button
-            type="submit"
-            className="w-full h-10 bg-blue-400 text-white rounded-md capitalize text-sm active:scale-[.95] transition-transform duration-[.3s]"
-          >
-            {navigation.state === "submitting" ? (
+          {navigation.state === "submitting" ? (
+            <button
+              type="submit"
+              disabled={true}
+              className="w-full h-10 bg-blue-400 text-white rounded-md capitalize text-sm"
+            >
               <svg
                 aria-hidden="true"
                 role="status"
@@ -73,10 +71,15 @@ export default function CreateTask() {
                   fill="#1C64F2"
                 ></path>
               </svg>
-            ) : (
-              "create"
-            )}
-          </button>
+            </button>
+          ) : (
+            <button
+              type="submit"
+              className="w-full h-10 bg-blue-400 text-white rounded-md capitalize text-sm active:scale-[.95] transition-transform duration-[.3s]"
+            >
+              create
+            </button>
+          )}
         </div>
       </Form>
     </div>
