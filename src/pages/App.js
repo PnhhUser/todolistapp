@@ -4,9 +4,16 @@ import { useEffect, useState } from "react";
 import { collectName } from "../contants";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../config/firebase";
+import { debounce, searchName, sortAtoZ } from "../utils";
 
 export default function App() {
   const [taskList, setTaskList] = useState([]);
+  const [search, setSearch] = useState("");
+  const [isSort, setIsSort] = useState(false);
+
+  const handleSort = () => {
+    setIsSort(!isSort);
+  };
 
   useEffect(() => {
     let tasks = [];
@@ -16,7 +23,17 @@ export default function App() {
         snapshot.docChanges().forEach((change) => {
           if (change.type === "added") {
             tasks.push({ ...change.doc.data(), id: change.doc.id });
-            setTaskList([...tasks]);
+            const searchTaskList = searchName(search, tasks);
+
+            if (isSort) {
+              sortAtoZ(tasks);
+            }
+
+            if (search.length === 0) {
+              setTaskList([...tasks]);
+            } else {
+              setTaskList(searchTaskList);
+            }
           }
 
           if (change.type === "modified") {
@@ -36,12 +53,20 @@ export default function App() {
     return () => {
       unsubscribe();
     };
-  }, []);
+  }, [search, isSort]);
+
+  const handleSearch = (e) => {
+    let value = e.target.value;
+    setSearch(value);
+  };
+
+  const debouncedHandleChange = debounce(handleSearch, 500);
 
   return (
     <>
       <div className="px-6 relative">
         <input
+          onChange={debouncedHandleChange}
           type="text"
           id="search-text"
           placeholder="Search"
@@ -51,7 +76,7 @@ export default function App() {
       </div>
       <div className="px-6 mt-6 flex items-center w-full h-10 justify-between">
         <p className="text-sm capitalize text-gray-500 font-semibold">Tasks</p>
-        <div>
+        <div onClick={handleSort}>
           <AiOutlineSortAscending
             fontSize={20}
             className="text-gray-500 me-[10px]"

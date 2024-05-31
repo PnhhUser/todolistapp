@@ -18,3 +18,29 @@ export const currentDate = () => {
 export function getPathSegment(url, index) {
   return url.split("/")[index];
 }
+
+export function searchName(str, data) {
+  const resulst = data.filter((d) => {
+    return d.taskName.includes(str);
+  });
+
+  return resulst;
+}
+
+export const debounce = (func, delay) => {
+  let timeoutId;
+  return (...args) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      func.apply(null, args);
+    }, delay);
+  };
+};
+
+export const sortAtoZ = (data) => {
+  data.sort(function (a, b) {
+    var A = a.taskName.toUpperCase();
+    var B = b.taskName.toUpperCase();
+    return A < B ? -1 : A > B ? 1 : 0;
+  });
+};

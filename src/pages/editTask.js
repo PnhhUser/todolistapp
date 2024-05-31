@@ -39,7 +39,15 @@ export default function EditTask() {
   }, [param]);
 
   if (!isLoad) {
-    return;
+    return (
+      <div className="w-full h-[600px] flex justify-center items-center">
+        <div className="loader">
+          <span className="bar"></span>
+          <span className="bar"></span>
+          <span className="bar"></span>
+        </div>
+      </div>
+    );
   }
 
   return (
