@@ -2,7 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { AiOutlineLeft, AiOutlineMenu } from "react-icons/ai";
 import { getPathSegment } from "../utils";
 
-export default function Header() {
+export default function Header({ onMenu }) {
   const location = useLocation();
 
   let title = "";
@@ -20,7 +20,7 @@ export default function Header() {
       <div className="w-[18%]">
         <div className="flex justify-center text-lg">
           {location.pathname === "/" ? (
-            <AiOutlineMenu className="text-gray-700" />
+            <AiOutlineMenu className="text-gray-700" onClick={() => onMenu()} />
           ) : (
             <Link to=".." relative="path">
               <AiOutlineLeft className="text-gray-700" />

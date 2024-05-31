@@ -36,3 +36,37 @@
         transform: scaleY(1);
     }
 }
+
+.animation-left {
+    animation: left .8s ease-in-out;
+    transition: all .8s ease-in-out;
+}
+
+@keyframes left {
+    0% {
+        left: -100%;
+        transition: all .8s ease-in-out;
+    }
+
+    100% {
+        left: 0;
+        transition: all .8s ease-in-out;
+    }
+}
+
+.animation-right {
+    animation: right .8s ease-in-out;
+    transition: all .8s ease-in-out;
+}
+
+@keyframes right {
+    0% {
+        left: 0;
+        transition: all .8s ease-in-out;
+    }
+
+    100% {
+        left: -100%;
+        transition: all .8s ease-in-out;
+    }
+}

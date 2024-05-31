@@ -17,6 +17,7 @@ export default function App() {
 
   useEffect(() => {
     let tasks = [];
+
     const unsubscribe = onSnapshot(
       collection(db, collectName.taskList),
       (snapshot) => {

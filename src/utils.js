@@ -44,3 +44,6 @@ export const sortAtoZ = (data) => {
     return A < B ? -1 : A > B ? 1 : 0;
   });
 };
+
+export const freeze = (ms) =>
+  new Promise((resolve) => setTimeout(() => resolve(), ms));

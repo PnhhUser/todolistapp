@@ -2,9 +2,7 @@ import { Form, redirect, useNavigation } from "react-router-dom";
 import Select from "react-select";
 import { options } from "../contants";
 import { create } from "../service";
-
-const freeze = (ms) =>
-  new Promise((resolve) => setTimeout(() => resolve(), ms));
+import { freeze } from "../utils";
 
 export const action = async function ({ request }) {
   let formData = await request.formData();
