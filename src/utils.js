@@ -21,7 +21,7 @@ export function getPathSegment(url, index) {
 
 export function searchName(str, data) {
   const resulst = data.filter((d) => {
-    return d.taskName.includes(str);
+    return d.taskName.toLowerCase().includes(str.toLowerCase());
   });
 
   return resulst;

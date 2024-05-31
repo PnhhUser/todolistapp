@@ -8,7 +8,20 @@ export default function Layout() {
   return (
     <div className="relative">
       <Header />
-      <Outlet />
+      <div className="flex overflow-x-auto">
+        {false ? (
+          <>
+            <div className="w-[100%] bg-black h-screen fixed top-0 z-30 opacity-[.6]"></div>
+            <div className="w-[80%] h-screen bg-white fixed z-50 top-0">
+              <p>1</p>
+            </div>
+          </>
+        ) : null}
+
+        <div className="w-[100%]">
+          <Outlet />
+        </div>
+      </div>
       {location.pathname !== "/" ? null : (
         <Link
           to="create-task"
