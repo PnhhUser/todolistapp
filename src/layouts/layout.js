@@ -24,7 +24,10 @@ export default function Layout() {
 
   return (
     <div className="relative">
-      <Header onMenu={onMenu} />
+      {location.pathname === "/login" ||
+      location.pathname === "/register" ? null : (
+        <Header onMenu={onMenu} />
+      )}
       <div className="flex overflow-x-auto">
         {isOpenMenu ? (
           <>

@@ -14,12 +14,17 @@ import EditTask, {
   loader as editTaskLoader,
   action as editTaskAction,
 } from "./pages/editTask";
+import Login, { action as loginAction } from "./pages/login";
+import Register, { action as registerAction } from "./pages/register";
 
 export default function Router() {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path="/" element={<Layout />}>
         <Route index element={<App />} />
+
+        <Route path="login" element={<Login />} action={loginAction} />
+        <Route path="register" element={<Register action={registerAction} />} />
 
         <Route
           path="/create-task"
